@@ -8,16 +8,35 @@ namespace Adaline
 {
     class Letra
     {
-        int[] neuronios;
-        int[] pesos;
+        double[] neuronios;
+        double[] pesos;
+        string simbolo;
 
         public Letra()
         {
-            Neuronios = new int[64];
-            Pesos = new int[64];
+            Neuronios = new double[64];
         }
 
-        public int[] Neuronios
+        public Letra(double[] neuronios, string simbolo)
+        {
+            Simbolo = simbolo;
+            Neuronios = new double[64];
+
+            neuronios.CopyTo(Neuronios, 0);
+            Neuronios[Neuronios.Length-1] = 1;
+
+        }
+
+        public Letra(string simbolo)
+        {
+            Pesos = new double[64];
+            for(int i = 0; i < Pesos.Length; i++)
+            {
+                Pesos[i] = 0;
+            }
+        }
+
+        public double[] Neuronios
         {
             get
             {
@@ -30,7 +49,7 @@ namespace Adaline
             }
         }
 
-        public int[] Pesos
+        public double[] Pesos
         {
             get
             {
@@ -40,6 +59,19 @@ namespace Adaline
             set
             {
                 pesos = value;
+            }
+        }
+
+        public string Simbolo
+        {
+            get
+            {
+                return simbolo;
+            }
+
+            set
+            {
+                simbolo = value;
             }
         }
     }
