@@ -12,7 +12,6 @@ namespace Adaline
 {
     public partial class Adaline : Form
     {
-        Treino treino = new Treino();
 
         public Adaline()
         {
@@ -21,7 +20,13 @@ namespace Adaline
 
         private void button1_Click(object sender, EventArgs e)
         {
-            treino.train();
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Reconhecimento reconhecimento = new Reconhecimento();
+            reconhecimento.Show();
         }
     }
 }

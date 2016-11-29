@@ -29,6 +29,7 @@ namespace Adaline
 
         public Letra(string simbolo)
         {
+            Simbolo = simbolo;
             Pesos = new double[64];
             for(int i = 0; i < Pesos.Length; i++)
             {

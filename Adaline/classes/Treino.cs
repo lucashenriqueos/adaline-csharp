@@ -11,11 +11,13 @@ namespace Adaline
         //List<int[]> saidas = new List<int[]>();
         List<Fonte> fontes = new List<Fonte>();
         List<Letra> saidas = new List<Letra>();
-        double aprendizagem = 0.02;
-        double erroMinimo = 0.001;
+        double aprendizagem = 0.01;
+        double erroMinimo = 0.1;
         private double erroQuadratico;
 
         public double maiorErroQuadratico { get; private set; }
+        public double result { get; private set; }
+
 
         public Treino()
         {
@@ -24,16 +26,17 @@ namespace Adaline
             fonte01();
             fonte02();
             fonte03();
+            train();
         }
 
         public void train()
         {
             int ciclos = 0;
-            do
+            while (maiorErroQuadratico > erroMinimo)
             {
                 maiorErroQuadratico = -10000;
                 double erro = 0;
-                fontes.ForEach(fonte => {
+                Fontes.ForEach(fonte => {
                     fonte.Letras.ForEach(letra => {
                         saidas.ForEach(saida => {
                             int saidaDesejada = letra.Simbolo == saida.Simbolo ? 1 : -1;
@@ -42,12 +45,34 @@ namespace Adaline
                                     saida.Pesos[i] = atualizaPesos(saida.Pesos[i], letra.Neuronios[i], erro);
                             }
                             erroQuadratico = Math.Pow(erro, 2) / 2;
+                            maiorErroQuadratico = erroQuadratico > maiorErroQuadratico ? erroQuadratico : maiorErroQuadratico;
                         });
                     });
                 });
                 ciclos++;
-                maiorErroQuadratico = maiorErroQuadratico < erroQuadratico ? erroQuadratico : maiorErroQuadratico;
-            } while (maiorErroQuadratico > erroMinimo);
+            }
+
+            Console.WriteLine(ciclos);
+        }
+
+        internal String testar(int[] entrada)
+        {
+            string res = "";
+            saidas.ForEach(saida =>
+            {
+                double result = 0;
+                for (int i = 0; i < entrada.Length; i ++)
+                {
+                    result += entrada[i] * saida.Pesos[i];
+                }
+                result += saida.Pesos[entrada.Length];
+
+                if (result >= 0)
+                {
+                    res += saida.Simbolo + " ";
+                }
+            });
+            return res;
         }
 
         void printPesos(double[] pesos)
@@ -168,7 +193,7 @@ namespace Adaline
               1, 1, 1,-1,-1, 1, 1 }, "K"));
 
 
-            fontes.Add(fonte);
+            Fontes.Add(fonte);
         }
 
         private void fonte02()
@@ -251,7 +276,7 @@ namespace Adaline
                                  1,-1,-1,-1, 1,-1,-1 ,
                                  1,-1,-1,-1,-1, 1,-1 }, "K"));
 
-            fontes.Add(fonte);
+            Fontes.Add(fonte);
         }
 
         private void fonte03()
@@ -334,7 +359,7 @@ namespace Adaline
                                  -1, 1,-1,-1, 1,-1,-1 ,
                                  -1, 1,-1,-1,-1, 1,-1 ,
                                   1, 1, 1,-1,-1, 1, 1 }, "K"));
-            fontes.Add(fonte);
+            Fontes.Add(fonte);
         }
 
         private void saidasLetras()
@@ -346,6 +371,20 @@ namespace Adaline
             saidas.Add(new Letra("E"));
             saidas.Add(new Letra("J"));
             saidas.Add(new Letra("K"));
+        }
+
+
+        internal List<Fonte> Fontes
+        {
+            get
+            {
+                return fontes;
+            }
+
+            set
+            {
+                fontes = value;
+            }
         }
     }
 }
